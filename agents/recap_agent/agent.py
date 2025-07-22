@@ -10,6 +10,7 @@ from google.auth.transport.requests import Request
 import gspread
 from google.auth import default
 from datetime import datetime, timedelta
+from google.adk.tools import FunctionTool
 
 
 
@@ -120,6 +121,7 @@ def get_today_topic():
             }
     return {"summary": "There is no topic scheduled for today."}
 
+google_sheet_tool = FunctionTool(func=get_today_topic)
 
 # ───── Safety settings tell Gemini what to block outright ───────────
 safety_settings = [
@@ -148,7 +150,7 @@ root_agent = Agent(
     model=MODEL_NAME,
     name=AGENT_NAME,
     instruction=root_agent_instruction,
-    tools=[get_today_topic],  # Register tool
+    tools=[google_sheet_tool],  # Register tool
     generate_content_config=gen_cfg,
 )
 
